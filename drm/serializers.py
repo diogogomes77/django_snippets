@@ -1,12 +1,24 @@
 from rest_framework import serializers
 
-from drm.models import HasLicense, License, Organization
+from drm.models import HasLicense, License, Organization, Asset
+
+
+class AssetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Asset
+        fields = ["id", "name"]
 
 
 class LicenseSerializer(serializers.ModelSerializer):
+    assets = AssetSerializer(many=True, read_only=True)
+
     class Meta:
         model = License
-        fields = ["id", "name"]
+        fields = [
+            "id",
+            "name",
+            "assets",
+        ]
 
 
 class HasLicenseModelSerializer(serializers.ModelSerializer):

@@ -1,6 +1,14 @@
 from django.db import models
 
 
+class Asset(models.Model):
+    name = models.CharField(max_length=200)
+    license = models.ForeignKey("License", on_delete=models.CASCADE, related_name="assets")
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class License(models.Model):
     name = models.CharField(max_length=200)
 

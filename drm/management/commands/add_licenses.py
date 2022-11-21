@@ -1,6 +1,5 @@
 from random import choice
 from drm import models
-from drm.factories import LicensesFactory
 from drm.management.commands.base import CreateDataBaseCommand
 from drm.models import Organization
 import factory

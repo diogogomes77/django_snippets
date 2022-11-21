@@ -3,9 +3,23 @@ import datetime
 import factory
 from faker import Faker
 
+from drm.management.commands.add_licenses import get_random_license
+
 from . import models
 
 fake = Faker()
+
+
+def get_fake_filepath():
+    return fake.file_path(depth=2, category="video")
+
+
+class AssetsFactory(factory.django.DjangoModelFactory):
+    name = factory.LazyFunction(get_fake_filepath)
+    license = factory.LazyFunction(get_random_license)
+
+    class Meta:
+        model = models.Asset
 
 
 class LicensesFactory(factory.django.DjangoModelFactory):
