@@ -36,6 +36,14 @@ class OrganizationsFactory(factory.django.DjangoModelFactory):
         model = models.Organization
 
 
+class PolicyFactory(factory.django.DjangoModelFactory):
+    display_name = factory.LazyFunction(fake.domain_name)
+    statements = factory.LazyFunction(fake.hostname)
+
+    class Meta:
+        model = models.Policy
+
+
 # class HasLicenseFactory(factory.django.DjangoModelFactory):
 #     license = factory.LazyFunction(get_random_object(models.License))
 #     organization = factory.LazyFunction(get_random_object(models.Organization))

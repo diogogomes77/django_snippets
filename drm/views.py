@@ -30,9 +30,13 @@ class OrganizationsViewSet(viewsets.ModelViewSet):
                         "license__assets",
                         queryset=Asset.objects.all(),
                     ),
+                )
+                .prefetch_related(
+                    "license__attachments",
+                    "license__attachments__policy",
                 ),
             ),
-        )
+        ).prefetch_related("attachments", "attachments__policy")
 
         return qs
 

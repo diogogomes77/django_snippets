@@ -1,6 +1,6 @@
 from django.contrib import admin
-
-from drm.models import Asset, HasLicense, License, Organization
+from django.contrib.contenttypes import admin as cadmin
+from drm.models import Asset, Attachment, HasLicense, License, Organization, Policy
 
 
 class HasLicenseInline(admin.TabularInline):
@@ -13,17 +13,32 @@ class AssetsInline(admin.TabularInline):
     extra = 1
 
 
+class AttachmentInline(cadmin.GenericTabularInline):
+    model = Attachment
+
+
+@admin.register(Attachment)
+class AttachmentAdmin(admin.ModelAdmin):
+    list_display = ("id", "content_type", "policy")
+
+
+@admin.register(Policy)
+class PolicyAdmin(admin.ModelAdmin):
+    list_display = ("display_name",)
+    inlines = []
+
+
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name",)
-    inlines = [HasLicenseInline]
+    inlines = [HasLicenseInline, AttachmentInline]
     # prepopulated_fields = {"slug": ("course",)}
 
 
 @admin.register(License)
 class LicenseAdmin(admin.ModelAdmin):
     list_display = ("name",)
-    inlines = [AssetsInline]
+    inlines = [AssetsInline, AttachmentInline]
 
 
 @admin.register(HasLicense)

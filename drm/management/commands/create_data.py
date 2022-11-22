@@ -11,3 +11,5 @@ class Command(BaseCommand):
         management.call_command("create_licenses", number=10)
         management.call_command("create_assets", number=100)
         management.call_command("add_licenses", number=5)
+        management.call_command("create_policies", number=10)
+        management.call_command("add_policies", number=5)
