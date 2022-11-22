@@ -12,31 +12,40 @@ class OrganizationsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = self.queryset
-        qs = qs.prefetch_related(
-            Prefetch(
-                "haslicense_set",
-                queryset=HasLicense.objects.select_related(
-                    "license",
-                    "organization",
-                )
-                .prefetch_related(
-                    Prefetch(
+        qs = (
+            qs.prefetch_related(
+                Prefetch(
+                    "haslicense_set",
+                    queryset=HasLicense.objects.select_related(
                         "license",
-                        queryset=License.objects.all(),
+                        "organization",
+                    )
+                    .prefetch_related(
+                        Prefetch(
+                            "license",
+                            queryset=License.objects.all(),
+                        ),
+                    )
+                    .prefetch_related(
+                        Prefetch(
+                            "license__assets",
+                            queryset=Asset.objects.all(),
+                        ),
+                    )
+                    .prefetch_related(
+                        "license__attachments",
+                        "license__attachments__policy",
                     ),
-                )
-                .prefetch_related(
-                    Prefetch(
-                        "license__assets",
-                        queryset=Asset.objects.all(),
-                    ),
-                )
-                .prefetch_related(
-                    "license__attachments",
-                    "license__attachments__policy",
                 ),
-            ),
-        ).prefetch_related("attachments", "attachments__policy")
+            )
+            .prefetch_related("attachments", "attachments__policy")
+            .prefetch_related(
+                "licenses",
+                "licenses__assets",
+                "licenses__attachments",
+                "licenses__attachments__policy",
+            )
+        )
 
         return qs
 

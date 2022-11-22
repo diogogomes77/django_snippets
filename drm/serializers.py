@@ -22,10 +22,6 @@ class AssetSerializer(serializers.ModelSerializer):
 
 
 class PolicySerializer(serializers.ModelSerializer):
-
-    # organization = serializers.PrimaryKeyRelatedField(required=True, queryset=models.Organization.objects.active)
-    # statements = serializers.ListField(child=serializers.JSONField(), min_length=1)
-
     class Meta:
         model = Policy
         fields = "__all__"
@@ -36,8 +32,8 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attachment
-        # fields = ["id", "name"]
-        fields = "__all__"
+        fields = ["policy"]
+        # fields = "__all__"
 
 
 class LicenseSerializer(serializers.ModelSerializer):
@@ -77,15 +73,16 @@ class HasLicenseSerializer(serializers.Serializer):
 
 class OrganizationSerializer(serializers.ModelSerializer):
     attachments = AttachmentSerializer(many=True, read_only=True)
-    licenses = HasLicenseModelSerializer(many=True, source="haslicense_set", read_only=True)
-    # licenses = HasLicenseSerializer(many=True, source="haslicense_set", read_only=True)
-    # licenses = LicenseSerializer(many=True)
+    has_licenses = HasLicenseModelSerializer(many=True, source="haslicense_set", read_only=True)
+    # has_licenses = HasLicenseSerializer(many=True, source="haslicense_set", read_only=True)
+    licenses = LicenseSerializer(many=True)
 
     class Meta:
         model = Organization
         fields = [
             "name",
             "attachments",
+            "has_licenses",
             "licenses",
         ]
         # fields = "__all__"

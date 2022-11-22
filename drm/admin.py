@@ -15,11 +15,13 @@ class AssetsInline(admin.TabularInline):
 
 class AttachmentInline(cadmin.GenericTabularInline):
     model = Attachment
+    ct_field = "entity_type"
+    ct_fk_field = "entity_urn"
 
 
 @admin.register(Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ("id", "content_type", "policy")
+    list_display = ("id", "entity_type", "policy")
 
 
 @admin.register(Policy)
