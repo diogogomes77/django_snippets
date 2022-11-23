@@ -1,7 +1,7 @@
 from random import choice
 from drm import models
 from drm.management.commands.base import CreateDataBaseCommand
-from drm.models import Attachment, License, Organization
+from drm.models import Attachment, License, Organization, Role
 import factory
 from faker import Faker
 import datetime
@@ -22,7 +22,7 @@ class Command(CreateDataBaseCommand):
 
     def handle(self, *args, **options):
         super().handle(*args, **options)
-        model_classes = [Organization, License]
+        model_classes = [Organization, License, Role]
         for model_class in model_classes:
             self.stdout.write(f"Adding {self.number} policies to {model_class} ...")
 

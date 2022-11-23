@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.contenttypes import admin as cadmin
-from drm.models import Asset, Attachment, HasLicense, License, Organization, Policy
+from drm.models import Asset, Attachment, HasLicense, License, Membership, Organization, Policy, Role
 
 
 class HasLicenseInline(admin.TabularInline):
@@ -46,3 +46,20 @@ class LicenseAdmin(admin.ModelAdmin):
 @admin.register(HasLicense)
 class HasLicenseAdmin(admin.ModelAdmin):
     list_display = ("pk", "organization", "license")
+
+
+class RolesInline(admin.TabularInline):
+    model = Membership.roles.through
+    extra = 1
+
+
+@admin.register(Membership)
+class MembershipAdmin(admin.ModelAdmin):
+    list_display = ("display_name",)
+    inlines = [RolesInline]
+
+
+@admin.register(Role)
+class RoleAdmin(admin.ModelAdmin):
+    list_display = ("display_name",)
+    inlines = [AttachmentInline]

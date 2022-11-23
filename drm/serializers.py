@@ -1,6 +1,9 @@
 from rest_framework import serializers
 
-from drm.models import Attachment, HasLicense, License, Organization, Asset, Policy
+from drm.models import Attachment, HasLicense, License, Membership, Organization, Asset, Policy, Role
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class NestedRelationField(serializers.PrimaryKeyRelatedField):
@@ -86,3 +89,41 @@ class OrganizationSerializer(serializers.ModelSerializer):
             "licenses",
         ]
         # fields = "__all__"
+
+
+class RoleSerializer(serializers.ModelSerializer):
+
+    attachments = AttachmentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Role
+        fields = [
+            "display_name",
+            "attachments",
+        ]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "url",
+            "username",
+            "email",
+            "is_staff",
+        ]
+
+
+class MembershipSerializer(serializers.ModelSerializer):
+    roles = RoleSerializer(many=True)
+    # user = UserSerializer()
+    # organization = OrganizationSerializer()
+
+    class Meta:
+        model = Membership
+        fields = fields = [
+            "display_name",
+            "user",
+            "organization",
+            "roles",
+        ]

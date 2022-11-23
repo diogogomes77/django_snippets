@@ -1,9 +1,17 @@
 from rest_framework import viewsets
 
-from drm.models import Asset, HasLicense, License, Organization
-from drm.serializers import LicenseSerializer, OrganizationSerializer
+from drm.models import Asset, HasLicense, License, Membership, Organization
+from drm.serializers import (
+    LicenseSerializer,
+    MembershipSerializer,
+    OrganizationSerializer,
+    UserSerializer,
+)
 from django.db.models import F
 from django.db.models import Prefetch
+from django.contrib.auth import get_user_model
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 
 class OrganizationsViewSet(viewsets.ModelViewSet):
@@ -53,3 +61,43 @@ class OrganizationsViewSet(viewsets.ModelViewSet):
 class LicensesViewSet(viewsets.ModelViewSet):
     queryset = License.objects.all()
     serializer_class = LicenseSerializer
+
+
+User = get_user_model()
+
+
+class UsersViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all().prefetch_related(
+        "memberships",
+        "memberships__roles",
+        "memberships__roles__attachments",
+        "memberships__roles__attachments__policy",
+    )
+    serializer_class = UserSerializer
+
+    obj_name = "User"
+    lookup_field = "id"
+    lookup_url_kwarg = "id"
+    uri_field = lookup_field
+    detail_url_name = "user-detail"
+
+    @action(detail=True)
+    def memberships(self, request, id=None):
+        print("memberships: ", request)
+        obj = self.get_object()
+        print("--obj: ", obj)
+        qs = Membership.objects.filter(user=obj).prefetch_related(
+            "roles",
+            "roles__attachments",
+            "roles__attachments__policy",
+        )
+        # qs = qs.select_related("user", "organization")
+
+        serializer = MembershipSerializer(
+            qs,
+            many=True,
+            read_only=True,
+            context={"request": request},
+        )
+
+        return Response(serializer.data)

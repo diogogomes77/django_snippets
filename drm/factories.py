@@ -2,12 +2,13 @@ from random import choice
 import datetime
 import factory
 from faker import Faker
-
+from django.contrib.auth import get_user_model
 from drm.management.commands.add_licenses import get_random_license
 
 from . import models
 
 fake = Faker()
+User = get_user_model()
 
 
 def get_fake_filepath():
@@ -44,19 +45,18 @@ class PolicyFactory(factory.django.DjangoModelFactory):
         model = models.Policy
 
 
-# class HasLicenseFactory(factory.django.DjangoModelFactory):
-#     license = factory.LazyFunction(get_random_object(models.License))
-#     organization = factory.LazyFunction(get_random_object(models.Organization))
-#     start = factory.LazyFunction(
-#         lambda: fake.date_between_dates(
-#             date_start=datetime.datetime(2015, 1, 1), date_end=datetime.datetime(2021, 12, 31)
-#         )
-#     )
-#     end = factory.LazyAttribute(
-#         lambda o: fake.date_between_dates(
-#             date_start=o.started_at + datetime.timedelta(weeks=4), date_end=o.started_at + datetime.timedelta(weeks=60)
-#         )
-#     )
+class RoleFactory(factory.django.DjangoModelFactory):
+    display_name = factory.LazyFunction(fake.cryptocurrency_name)
 
-#     class Meta:
-#         models.HasLicense
+    class Meta:
+        model = models.Role
+
+
+class UserFactory(factory.django.DjangoModelFactory):
+    username = factory.LazyFunction(fake.user_name)
+    email = factory.LazyFunction(fake.ascii_email)
+    first_name = factory.LazyFunction(fake.first_name)
+    last_name = factory.LazyFunction(fake.last_name)
+
+    class Meta:
+        model = User

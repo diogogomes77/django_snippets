@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class Asset(models.Model):
@@ -72,3 +75,21 @@ class Organization(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Role(models.Model):
+    display_name = models.CharField(max_length=200)
+    attachments = GenericRelation("Attachment", "entity_urn", "entity_type")
+
+    def __str__(self) -> str:
+        return self.display_name
+
+
+class Membership(models.Model):
+    display_name = models.CharField(max_length=200)
+    user = models.ForeignKey(User, related_name="memberships", on_delete=models.CASCADE)
+    roles = models.ManyToManyField(to="Role", related_name="memberships")
+    organization = models.ForeignKey("Organization", related_name="members", on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return self.display_name
