@@ -91,7 +91,24 @@ class UsersViewSet(viewsets.ModelViewSet):
             "roles__attachments",
             "roles__attachments__policy",
         )
+        # try:
+        #     for p in qs.all():
+        #         print("---- qs : ", p.__dict__)
+        #         print("---- _prefetched_objects_cache keys : ", p._prefetched_objects_cache.keys())
+        #         role_qs = p._prefetched_objects_cache["roles"]
+        #         for r in role_qs.all():
+        #             print("-- role: ", r.__dict__)
+        # except:
+        #     pass
         # qs = qs.select_related("user", "organization")
+
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            serializer = MembershipSerializer(page, many=True, read_only=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = MembershipSerializer(qs, many=True, read_only=True)
+        return Response(serializer.data)
 
         serializer = MembershipSerializer(
             qs,

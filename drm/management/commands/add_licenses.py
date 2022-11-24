@@ -29,7 +29,8 @@ class Command(CreateDataBaseCommand):
                 license = get_random_license()
                 print("license: ", license)
                 start = fake.date_between_dates(
-                    date_start=datetime.datetime(2015, 1, 1), date_end=datetime.datetime(2021, 12, 31)
+                    date_start=datetime.datetime(2015, 1, 1, tzinfo=datetime.timezone.utc),
+                    date_end=datetime.datetime(2021, 12, 31, tzinfo=datetime.timezone.utc),
                 )
                 end = fake.date_between_dates(
                     date_start=start + datetime.timedelta(weeks=4),

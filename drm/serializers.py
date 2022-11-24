@@ -27,7 +27,7 @@ class AssetSerializer(serializers.ModelSerializer):
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = Policy
-        fields = "__all__"
+        fields = ["id", "display_name", "statements"]
 
 
 class AttachmentSerializer(serializers.ModelSerializer):
@@ -85,8 +85,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
         fields = [
             "name",
             "attachments",
-            "has_licenses",
-            "licenses",
+            # "has_licenses",
+            # "licenses",
         ]
         # fields = "__all__"
 
@@ -124,6 +124,6 @@ class MembershipSerializer(serializers.ModelSerializer):
         fields = fields = [
             "display_name",
             "user",
-            "organization",
+            # "organization",
             "roles",
         ]
