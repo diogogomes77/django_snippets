@@ -10,7 +10,8 @@ User = get_user_model()
 
 
 class Asset(models.Model):
-    asset_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="asset")
+    # asset_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="asset")
+    asset_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     license = models.ForeignKey("License", on_delete=models.CASCADE, related_name="assets")
 
@@ -19,7 +20,8 @@ class Asset(models.Model):
 
 
 class Policy(models.Model):
-    policy_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="policy")
+    # policy_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="policy")
+    policy_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     display_name = models.CharField(max_length=64)
     statements = models.CharField(max_length=256)
     # organization = models.ForeignKey(
@@ -33,9 +35,11 @@ class Policy(models.Model):
 
 
 class Attachment(models.Model):
-    attachment_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="attachment")
+    # attachment_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="attachment")
+    attachment_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     entity_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # content_type
-    entity_urn = URNField()  # object_id
+    # entity_urn = URNField()  # object_id
+    entity_urn = models.UUIDField()  # object_id
     entity = GenericForeignKey("entity_type", "entity_urn")  # tagged_object
 
     # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -52,7 +56,8 @@ class Attachment(models.Model):
 
 
 class License(models.Model):
-    license_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="license")
+    # license_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="license")
+    license_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     attachments = GenericRelation("Attachment", "entity_urn", "entity_type")
 
@@ -72,7 +77,8 @@ class HasLicense(models.Model):
 
 
 class Organization(models.Model):
-    organization_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="organization")
+    # organization_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="organization")
+    organization_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     licenses = models.ManyToManyField(
         License,
@@ -87,7 +93,8 @@ class Organization(models.Model):
 
 
 class Role(models.Model):
-    role_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="role")
+    # role_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="role")
+    role_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     display_name = models.CharField(max_length=200)
     attachments = GenericRelation("Attachment", "entity_urn", "entity_type")
 
@@ -96,7 +103,8 @@ class Role(models.Model):
 
 
 class Membership(models.Model):
-    membership_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="membership")
+    # membership_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="membership")
+    membership_urn = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     display_name = models.CharField(max_length=200)
     user = models.ForeignKey(User, related_name="memberships", on_delete=models.CASCADE)
     roles = models.ManyToManyField(to="Role", related_name="memberships")

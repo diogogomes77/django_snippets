@@ -32,7 +32,7 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include(router.urls)),
     path("__debug__/", include("debug_toolbar.urls")),
-    # path("user/<str:pk>", UsersViewSet.as_view({"get": "list"}), name="user-detail"),
+    path("api/user/<str:pk>", UsersViewSet.as_view({"get": "list"}), name="user-detail"),
     path("users/", UserListView.as_view()),
     path("users/<str:pk>", UserDetailView.as_view()),
 ]
