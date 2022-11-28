@@ -1,3 +1,4 @@
+from copy import deepcopy
 from rest_framework import viewsets
 
 from drm.models import Asset, HasLicense, License, Membership, Organization
@@ -103,6 +104,20 @@ class UsersViewSet(viewsets.ModelViewSet):
         # qs = qs.select_related("user", "organization")
 
         page = self.paginate_queryset(qs)
+        page2 = deepcopy(page)
+        try:
+            for p in page2:
+                print("---- page2 : ", p.__dict__)
+                for i in p.__dict__.items():
+                    print("---- item : ", i)
+                print("---- _prefetched_objects_cache keys : ", p._prefetched_objects_cache.keys())
+                prefetched_roles = p._prefetched_objects_cache["roles"]
+                print("---- prefetched_roles : ", prefetched_roles.__dict__)
+                role_qs = p._prefetched_objects_cache["attachments"]
+                for r in role_qs.all():
+                    print("-- attachment: ", r.__dict__)
+        except:
+            pass
         if page is not None:
             serializer = MembershipSerializer(page, many=True, read_only=True)
             return self.get_paginated_response(serializer.data)

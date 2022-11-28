@@ -21,7 +21,7 @@ class AttachmentInline(cadmin.GenericTabularInline):
 
 @admin.register(Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
-    list_display = ("id", "entity_type", "policy")
+    list_display = ("attachment_urn", "entity_type", "policy")
 
 
 @admin.register(Policy)

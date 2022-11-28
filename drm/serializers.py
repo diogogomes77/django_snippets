@@ -21,13 +21,13 @@ class NestedRelationField(serializers.PrimaryKeyRelatedField):
 class AssetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Asset
-        fields = ["id", "name"]
+        fields = ["asset_urn", "name"]
 
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = Policy
-        fields = ["id", "display_name", "statements"]
+        fields = ["policy_urn", "display_name", "statements"]
 
 
 class AttachmentSerializer(serializers.ModelSerializer):
@@ -76,9 +76,9 @@ class HasLicenseSerializer(serializers.Serializer):
 
 class OrganizationSerializer(serializers.ModelSerializer):
     attachments = AttachmentSerializer(many=True, read_only=True)
-    has_licenses = HasLicenseModelSerializer(many=True, source="haslicense_set", read_only=True)
+    # has_licenses = HasLicenseModelSerializer(many=True, source="haslicense_set", read_only=True)
     # has_licenses = HasLicenseSerializer(many=True, source="haslicense_set", read_only=True)
-    licenses = LicenseSerializer(many=True)
+    # licenses = LicenseSerializer(many=True)
 
     class Meta:
         model = Organization
@@ -107,6 +107,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "id",
             "url",
             "username",
             "email",

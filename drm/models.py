@@ -2,11 +2,15 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import get_user_model
+import uuid
+
+from drm.models_utils import URN_NAMESPACE, URNField
 
 User = get_user_model()
 
 
 class Asset(models.Model):
+    asset_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="asset")
     name = models.CharField(max_length=200)
     license = models.ForeignKey("License", on_delete=models.CASCADE, related_name="assets")
 
@@ -15,6 +19,7 @@ class Asset(models.Model):
 
 
 class Policy(models.Model):
+    policy_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="policy")
     display_name = models.CharField(max_length=64)
     statements = models.CharField(max_length=256)
     # organization = models.ForeignKey(
@@ -22,14 +27,15 @@ class Policy(models.Model):
     # )
 
     def __str__(self):
-        return f"{self.id} -> {self.display_name}"
+        return f"{self.policy_urn} -> {self.display_name}"
 
     __repr__ = __str__
 
 
 class Attachment(models.Model):
+    attachment_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="attachment")
     entity_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # content_type
-    entity_urn = models.PositiveIntegerField()  # object_id
+    entity_urn = URNField()  # object_id
     entity = GenericForeignKey("entity_type", "entity_urn")  # tagged_object
 
     # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -46,6 +52,7 @@ class Attachment(models.Model):
 
 
 class License(models.Model):
+    license_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="license")
     name = models.CharField(max_length=200)
     attachments = GenericRelation("Attachment", "entity_urn", "entity_type")
 
@@ -54,6 +61,7 @@ class License(models.Model):
 
 
 class HasLicense(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     license = models.ForeignKey(License, on_delete=models.CASCADE)
     organization = models.ForeignKey("Organization", on_delete=models.CASCADE)
     start = models.DateTimeField()
@@ -64,6 +72,7 @@ class HasLicense(models.Model):
 
 
 class Organization(models.Model):
+    organization_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="organization")
     name = models.CharField(max_length=200)
     licenses = models.ManyToManyField(
         License,
@@ -78,6 +87,7 @@ class Organization(models.Model):
 
 
 class Role(models.Model):
+    role_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="role")
     display_name = models.CharField(max_length=200)
     attachments = GenericRelation("Attachment", "entity_urn", "entity_type")
 
@@ -86,6 +96,7 @@ class Role(models.Model):
 
 
 class Membership(models.Model):
+    membership_urn = URNField(primary_key=True, editable=False, namespace=URN_NAMESPACE, typename="membership")
     display_name = models.CharField(max_length=200)
     user = models.ForeignKey(User, related_name="memberships", on_delete=models.CASCADE)
     roles = models.ManyToManyField(to="Role", related_name="memberships")
