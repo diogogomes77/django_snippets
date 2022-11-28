@@ -90,7 +90,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         qs = Membership.objects.filter(user=obj).prefetch_related(
             "roles",
             "roles__attachments",
-            "roles__attachments__policy",
+            # "roles__attachments__policy",
         )
         # try:
         #     for p in qs.all():

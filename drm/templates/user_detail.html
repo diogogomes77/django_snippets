@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{ user.username }}</h2>
+    <ul>
+        {% for membership in user.memberships.all %}
+            membership: {{ membership.membership_urn }}
+            <li>
+                <ul> 
+                    {% for role in membership.roles.all %}
+                    role: {{ role.role_urn }}
+                    <li>
+                        <ul> 
+                            {% for attachment in role.attachments.all %}
+                            <li>
+                                <p>attachment: {{ attachment.attachment_urn }}</p>
+                                <p>policy: {{ attachment.policy.policy_urn }}</p>
+                            </li>
+                            {% endfor %}
+                        </ul>
+
+                    </li>
+                    {% endfor %}
+                </ul>
+            </li>
+                
+        {% endfor %}
+       
+    </ul>
+{% endblock %}

@@ -85,14 +85,23 @@ class URNField(models.UUIDField):
 
     def to_python(self, value) -> str:
         """Converts the value to the expected python type"""
+        ret = None
         if isinstance(value, uuid.UUID):
-            return f"{self.urn_prefix}{value.hex}"
+            ret = f"{self.urn_prefix}{value.hex}"
+            print("--- to_python: ", ret)
+            return ret
         if not self._strict:
             if isinstance(value, str):
                 if value.startswith(self.urn_prefix):
-                    return value
-                return f"{self.urn_prefix}{value[-32:]}"
-        return value
+                    ret = value
+                    print("--- to_python: ", ret)
+                    return ret
+                ret = f"{self.urn_prefix}{value[-32:]}"
+                print("--- to_python: ", ret)
+                return ret
+        ret = value
+        print("--- to_python: ", ret)
+        return ret
 
     def get_prep_value(self, value):
         """preps the value for writing to the database"""

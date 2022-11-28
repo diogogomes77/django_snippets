@@ -31,11 +31,14 @@ class PolicySerializer(serializers.ModelSerializer):
 
 
 class AttachmentSerializer(serializers.ModelSerializer):
-    policy = NestedRelationField(PolicySerializer, queryset=Policy.objects.all())
+    # policy = NestedRelationField(PolicySerializer, queryset=Policy.objects.all())
 
     class Meta:
         model = Attachment
-        fields = ["policy"]
+        fields = [
+            "attachment_urn",
+            # "policy",
+        ]
         # fields = "__all__"
 
 

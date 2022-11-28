@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from drm.html_views import UserDetailView, UserListView
 from drm.views import LicensesViewSet, OrganizationsViewSet, UsersViewSet
 
 # from snippets.views import UserViewSet
@@ -29,7 +30,9 @@ router.register(r"users", UsersViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
-    path("", include(router.urls)),
+    path("api/", include(router.urls)),
     path("__debug__/", include("debug_toolbar.urls")),
-    path("user/<str:pk>", UsersViewSet.as_view({"get": "list"}), name="user-detail"),
+    # path("user/<str:pk>", UsersViewSet.as_view({"get": "list"}), name="user-detail"),
+    path("users/", UserListView.as_view()),
+    path("users/<str:pk>", UserDetailView.as_view()),
 ]
