@@ -27,11 +27,15 @@ class Command(CreateDataBaseCommand):
             self.stdout.write(f"Adding {self.number} policies to {model_class} ...")
 
             for obj in model_class.objects.all():
+
                 for n in range(1, self.number):
-                    policy = get_random_policy()
-                    print("policy: ", policy)
-                    try:
-                        obj.attachments.create(policy=policy)
-                        # attachment = Attachment.objects.create(entity=obj, )
-                    except Exception as e:
-                        print("Exception: ", e)
+                    done = False
+                    while not done:
+                        policy = get_random_policy()
+                        print("policy: ", policy)
+                        try:
+                            obj.attachments.create(policy=policy)
+                            done = True
+                            # attachment = Attachment.objects.create(entity=obj, )
+                        except Exception as e:
+                            print("Exception: ", e)

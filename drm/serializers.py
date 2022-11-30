@@ -32,6 +32,7 @@ class PolicySerializer(serializers.ModelSerializer):
 
 class AttachmentSerializer(serializers.ModelSerializer):
     # policy = NestedRelationField(PolicySerializer, queryset=Policy.objects.all())
+    # attachment_urn = serializers.SerializerMethodField()
 
     class Meta:
         model = Attachment
@@ -40,6 +41,9 @@ class AttachmentSerializer(serializers.ModelSerializer):
             # "policy",
         ]
         # fields = "__all__"
+
+    def get_attachment_urn(self, instance):
+        return instance.attachment_ok
 
 
 class LicenseSerializer(serializers.ModelSerializer):
@@ -126,6 +130,7 @@ class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
         fields = fields = [
+            "membership_urn",
             "display_name",
             "user",
             # "organization",

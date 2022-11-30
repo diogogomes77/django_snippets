@@ -42,7 +42,7 @@ class Command(CreateDataBaseCommand):
                     user=user,
                     organization=organization,
                 )
-                for n in range(1, 5):
+                for n in range(1, 2):
                     role = get_random_role()
                     print("role: ", role)
                     membership.roles.add(role)

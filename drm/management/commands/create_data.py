@@ -15,6 +15,6 @@ class Command(BaseCommand):
 
         management.call_command("create_roles", number=10)
         management.call_command("create_users", number=10)
-        management.call_command("create_memberships", number=3)
+        management.call_command("create_memberships", number=2)
 
-        management.call_command("add_policies", number=5)
+        management.call_command("add_policies", number=2)
